@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:prens/pages/login_screen.dart';
 import 'package:prens/pages/main_screen.dart';
 import 'package:prens/theme/main_theme.dart';
 void main() {

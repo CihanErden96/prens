@@ -7,10 +7,12 @@ class MainTheme {
       seedColor: Color(0xFFE31C24),
       primary: Color(0xFFE31C24),
       secondary: Color(0xFFE65100),
+      // ignore: deprecated_member_use
       background: Color(0xFFFFF8E1),
       surface: Colors.white,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
+      // ignore: deprecated_member_use
       onBackground: Colors.black87,
       onSurface: Colors.black,
       brightness: Brightness.light,
@@ -18,18 +20,18 @@ class MainTheme {
     scaffoldBackgroundColor: Color(0xFFFFF8E1),
     appBarTheme: AppBarTheme(
       backgroundColor: Color(0xFFE31C24),
-      foregroundColor: Colors.white,
+      foregroundColor: Color(0xFFFFF8E1),
       elevation: 2,
       titleTextStyle: GoogleFonts.inter(
-  fontSize: 20,
-  fontWeight: FontWeight.bold,
-  color: Colors.white,
-),
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xFFE31C24),
-        foregroundColor: Colors.white,
+        foregroundColor: Color(0xFFFFF8E1),
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -37,7 +39,7 @@ class MainTheme {
         textStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
       ),
     ),
-        textTheme: TextTheme(
+    textTheme: TextTheme(
       titleLarge: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,
@@ -53,12 +55,10 @@ class MainTheme {
       ),
     ),
     cardTheme: CardThemeData(
-      color: Colors.white,
-      elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 4,
     ),
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: Color(0xFFFFF8E1),
@@ -84,5 +84,15 @@ class MainTheme {
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     ),
+  );
+
+  // Yeni eklenen gradient property
+  static LinearGradient redCreamGradient = const LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFFE31C24), // kırmızı
+      Color(0xFFFFF8E1), // krem
+    ],
   );
 }
