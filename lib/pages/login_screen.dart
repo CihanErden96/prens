@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:prens/main.dart'; // main.dart dosyasını import et
 import 'package:prens/pages/main_screen.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../constants/global_variables.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -46,11 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(
-                  'assets/images/login.png',
-                  width: 250,
-                  height: 250,
-                ),
+                Image.asset('assets/images/login.png', width: 250, height: 250),
                 const SizedBox(height: 64),
               ],
             ),
@@ -71,7 +67,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1), // Temadan alınan renk ile güncellendi
+                      color: Theme.of(context).colorScheme.onSurface
+                          .withOpacity(
+                            0.1,
+                          ), // Temadan alınan renk ile güncellendi
                       spreadRadius: 2,
                       blurRadius: 5,
                       offset: const Offset(0, 3),
@@ -86,21 +85,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     focusNode: _focusNode,
                     style: TextStyle(
                       fontSize: _focusNode.hasFocus ? 16 : 4,
-                      color: Theme.of(context).inputDecorationTheme.labelStyle?.color,
+                      color: Theme.of(
+                        context,
+                      ).inputDecorationTheme.labelStyle?.color,
                     ),
                     decoration: InputDecoration(
                       hintText: '00000000-0000-0000-000000000000',
                       labelText: 'Client ID',
                       labelStyle: TextStyle(
-                        fontSize: Theme.of(context).inputDecorationTheme.labelStyle!.fontSize! * 1.3,
-                        color: Theme.of(context).inputDecorationTheme.labelStyle?.color,
+                        fontSize:
+                            Theme.of(
+                              context,
+                            ).inputDecorationTheme.labelStyle!.fontSize! *
+                            1.3,
+                        color: Theme.of(
+                          context,
+                        ).inputDecorationTheme.labelStyle?.color,
                       ),
-                      hintStyle: Theme.of(context).inputDecorationTheme.hintStyle?.copyWith(fontSize: 16),
+                      hintStyle: Theme.of(
+                        context,
+                      ).inputDecorationTheme.hintStyle?.copyWith(fontSize: 16),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       disabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
                     ),
                   ),
                 ),
@@ -119,7 +131,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3), // Temadan alınan renk ile güncellendi
+                              color: Theme.of(context).colorScheme.onSurface
+                                  .withOpacity(
+                                    0.3,
+                                  ), // Temadan alınan renk ile güncellendi
                               blurRadius: 20.0,
                               spreadRadius: 1.0,
                               offset: const Offset(5.0, 5.0),
@@ -133,28 +148,45 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           style: Theme.of(context).elevatedButtonTheme.style,
                           onPressed: () async {
-                            await secureStorage.write(key: 'clientID', value: _clientIdController.text.trim());
+                            await secureStorage.write(
+                              key: 'clientID',
+                              value: _clientIdController.text.trim(),
+                            );
                             if (authService != null) {
                               final token = await authService!.signIn();
                               if (token != null) {
-                                Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-                                await secureStorage.write(key: 'webURL', value: decodedToken['scp']);
+                                Map<String, dynamic> decodedToken =
+                                    JwtDecoder.decode(token);
+                                await secureStorage.write(
+                                  key: 'webURL',
+                                  value: decodedToken['scp'],
+                                );
                                 // ignore: use_build_context_synchronously
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                                  MaterialPageRoute(
+                                    builder: (context) => const MainScreen(),
+                                  ),
                                 );
                               } else {
                                 // ignore: use_build_context_synchronously
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Authentication failed. Please try again.')),
+                                  const SnackBar(
+                                    content: Text(
+                                      'Authentication failed. Please try again.',
+                                    ),
+                                  ),
                                 );
                               }
                             } else {
                               // authService is null
                               // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('AuthService is not initialized.')),
+                                const SnackBar(
+                                  content: Text(
+                                    'AuthService is not initialized.',
+                                  ),
+                                ),
                               );
                             }
                           },
@@ -164,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

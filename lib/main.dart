@@ -5,10 +5,6 @@ import 'package:prens/services/msal_auth_service.dart';
 import 'package:prens/core/app_theme.dart';
 import 'constants/global_variables.dart';
 import 'config/app_config.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-final secureStorage = const FlutterSecureStorage();
-MsalAuthService? authService;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,10 +60,9 @@ class _MyAppState extends State<MyApp> {
             );
           }
 
-          final isLoggedIn = snapshot.data!  && clientID!=null && webURL!=null;
-          return isLoggedIn
-              ? MainScreen()
-              : LoginScreen();
+          final isLoggedIn =
+              snapshot.data! && clientID != null && webURL != null;
+          return isLoggedIn ? MainScreen() : LoginScreen();
         },
       ),
     );

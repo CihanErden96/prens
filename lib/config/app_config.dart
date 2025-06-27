@@ -1,11 +1,6 @@
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-enum AppEnvironment {
-  development,
-  staging,
-  production,
-}
+enum AppEnvironment { development, staging, production }
 
 class AppConfig {
   final String authAndroidConfigPath;
@@ -38,4 +33,3 @@ class AppConfig {
     );
   }
 }
-

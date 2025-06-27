@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prens/main.dart'; // main.dart dosyasını import et
-// Import rendering for ScrollDirection
 import '../widgets/denetim_card.dart';
 import '../widgets/bottom_navigation_bar.dart';
+import '../constants/global_variables.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -17,12 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   double _appBarHeight = 130;
   bool _isBottomBarRaised = false;
   int _selectedIndex = -1;
-  List<String> notes = [
-    "Not 1",
-    "Not 2",
-    "Not 3",
-    "Not 4",
-  ];
+  List<String> notes = ["Not 1", "Not 2", "Not 3", "Not 4"];
   final TextEditingController _noteController = TextEditingController();
 
   @override
@@ -42,7 +36,6 @@ class _MainScreenState extends State<MainScreen> {
     return Theme(
       data: Theme.of(context),
       child: Scaffold(
-        
         body: Stack(
           children: [
             GestureDetector(
@@ -69,14 +62,19 @@ class _MainScreenState extends State<MainScreen> {
                       duration: const Duration(milliseconds: 300),
                       height: _appBarHeight,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary, // Temadan alınan renk ile güncellendi
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary, // Temadan alınan renk ile güncellendi
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(30),
                           bottomRight: Radius.circular(30),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5), // Temadan alınan renk ile güncellendi
+                            color: Theme.of(context).colorScheme.onSurface
+                                .withOpacity(
+                                  0.5,
+                                ), // Temadan alınan renk ile güncellendi
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -89,7 +87,9 @@ class _MainScreenState extends State<MainScreen> {
                             left: 0,
                             right: 0,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15.0,
+                              ),
                               child: SizedBox(
                                 height: 50,
                                 child: Row(
@@ -97,45 +97,94 @@ class _MainScreenState extends State<MainScreen> {
                                   children: [
                                     const CircleAvatar(
                                       radius: 28,
-                                      backgroundImage: NetworkImage('https://picsum.photos/200'),
+                                      backgroundImage: NetworkImage(
+                                        'https://picsum.photos/200',
+                                      ),
                                     ),
                                     const SizedBox(width: 12),
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Hoşgeldin,',
-                                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 14), // Temadan alınan renk ile güncellendi
+                                          style: TextStyle(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimary,
+                                            fontSize: 14,
+                                          ), // Temadan alınan renk ile güncellendi
                                         ),
                                         Text(
                                           'Cihan',
-                                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold, fontSize: 16), // Temadan alınan renk ile güncellendi
+                                          style: TextStyle(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ), // Temadan alınan renk ile güncellendi
                                         ),
                                       ],
                                     ),
                                     const Spacer(),
                                     IconButton(
-                                      icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.onPrimary), // Temadan alınan renk ile güncellendi
+                                      icon: Icon(
+                                        Icons.logout,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary,
+                                      ), // Temadan alınan renk ile güncellendi
                                       onPressed: () {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              title: Text("Logout Confirmation", style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
-                                              content: Text("Are you sure you want to logout?", style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                                              title: Text(
+                                                "Logout Confirmation",
+                                                style: TextStyle(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              content: Text(
+                                                "Are you sure you want to logout?",
+                                                style: TextStyle(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.onSurface,
+                                                ),
+                                              ),
                                               actions: <Widget>[
                                                 TextButton(
-                                                  child: Text("Cancel", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                                                  child: Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
+                                                    ),
+                                                  ),
                                                   onPressed: () {
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
                                                 TextButton(
-                                                  child: Text("Logout", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                                                  child: Text(
+                                                    "Logout",
+                                                    style: TextStyle(
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
+                                                    ),
+                                                  ),
                                                   onPressed: () async {
                                                     Navigator.of(context).pop();
-                                                    await authService?.signOut();
+                                                    await authService
+                                                        ?.signOut();
                                                   },
                                                 ),
                                               ],
@@ -177,9 +226,7 @@ class _MainScreenState extends State<MainScreen> {
                   Expanded(
                     child: ListView(
                       padding: const EdgeInsets.all(16),
-                      children: const [
-                        DenetimCard(),
-                      ],
+                      children: const [DenetimCard()],
                     ),
                   ),
                 ],
