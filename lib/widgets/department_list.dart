@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prens/global_variables.dart' as globals;
+import 'package:prens/constants/global_variables.dart' as globals;
 import 'package:percent_indicator/circular_percent_indicator.dart'; // Import percent_indicator
 
 class SwipeToDeletedepartmentItem extends StatefulWidget {
@@ -82,7 +82,7 @@ class _SwipeToDeletedepartmentItemState extends State<SwipeToDeletedepartmentIte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.departmentItem, style: const TextStyle(color: Colors.white)),
+              Text(widget.departmentItem, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)), // Temadan alındı
               // Replaced Icon with CircularPercentIndicator
               CircularPercentIndicator(
                 radius: 25.0, // Adjust size as needed
@@ -93,11 +93,11 @@ class _SwipeToDeletedepartmentItemState extends State<SwipeToDeletedepartmentIte
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12, // Adjust font size as needed
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimary, // Temadan alındı
                   ),
                 ),
-                progressColor: Colors.white,
-                backgroundColor: Colors.white24,
+                progressColor: Theme.of(context).colorScheme.onPrimary, // Temadan alındı
+                backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2), // Temadan alındı
                 circularStrokeCap: CircularStrokeCap.round,
               ),
             ],
@@ -116,12 +116,12 @@ class _SwipeToDeletedepartmentItemState extends State<SwipeToDeletedepartmentIte
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.red,
+                    color: Theme.of(context).colorScheme.error, // Temadan alındı
                   ),
                   padding: const EdgeInsets.all(8),
-                  child: const Icon(Icons.delete, color: Colors.white),
+                  child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError), // Temadan alındı
                 ),
               ),
             ),
@@ -141,11 +141,11 @@ class _SwipeToDeletedepartmentItemState extends State<SwipeToDeletedepartmentIte
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text('Fabrikayı Sil'), // Updated dialog title
-                      content: Text('${widget.departmentItem} silinsin mi?'), // Updated dialog content
+                      title: Text('Fabrikayı Sil', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)), // Temadan alındı
+                      content: Text('${widget.departmentItem} silinsin mi?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)), // Temadan alındı
                       actions: [
-                        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Hayır')),
-                        TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Evet')),
+                        TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text('Hayır', style: TextStyle(color: Theme.of(context).colorScheme.primary))), // Temadan alındı
+                        TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text('Evet', style: TextStyle(color: Theme.of(context).colorScheme.primary))), // Temadan alındı
                       ],
                     );
                   },
@@ -202,22 +202,22 @@ class _departmentSelectionListState extends State<departmentSelectionList> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor, // Set background color
-          title: Text('Yeni Fabrika Ekle', style: TextStyle(color: Theme.of(context).primaryColor)), // Updated title style
+          title: Text('Yeni Fabrika Ekle', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
           content: TextField(
             controller: _textEditingController,
             decoration: const InputDecoration(hintText: "Fabrika Adı"), // Updated hint text
-            style: TextStyle(color: Theme.of(context).primaryColor), // Updated text field style
+            style: TextStyle(color: Theme.of(context).colorScheme.primary), // Temadan alındı
           ),
           actions: [
             TextButton(
-              child: Text('İptal', style: TextStyle(color: Theme.of(context).primaryColor)), // Updated button style
+              child: Text('İptal', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
               onPressed: () {
                 Navigator.of(context).pop();
                 _textEditingController.clear();
               },
             ),
             TextButton(
-              child: Text('Ekle', style: TextStyle(color: Theme.of(context).primaryColor)), // Updated button style
+              child: Text('Ekle', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
               onPressed: () {
                 final newdepartment = _textEditingController.text.trim(); // Updated variable name
                 if (newdepartment.isNotEmpty) {
@@ -298,18 +298,18 @@ class _departmentSelectionListState extends State<departmentSelectionList> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context).primaryColor,
                                 shape: BoxShape.circle,
-                                boxShadow: const [
+                                boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black26,
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alındı
                                     blurRadius: 8,
                                     offset: Offset(0, 4),
                                   ),
                                 ],
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.add,
                                 size: 20,
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary, // Temadan alındı
                               ),
                             ),
                           ),

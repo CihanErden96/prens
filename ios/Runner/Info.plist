@@ -10,6 +10,21 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleURLTypes</key>
+    <array>
+    	<dict>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+				<string>msalebda0902-322d-4968-b454-d49875db9f6d</string>
+    			<string>msauth.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    		</array>
+    	</dict>
+    </array>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+    	<string>msauthv2</string>
+    	<string>msauthv3</string>
+    </array>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

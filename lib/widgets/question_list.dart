@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prens/global_variables.dart' as globals;
+import 'package:prens/constants/global_variables.dart' as globals;
 
 class SwipeToDeleteItem extends StatefulWidget {
   final String question;
@@ -86,7 +86,7 @@ class _SwipeToDeleteItemState extends State<SwipeToDeleteItem> with SingleTicker
                   constraints: const BoxConstraints(minWidth: 100),
                   child: Text(
                     widget.question,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onPrimary), // Temadan alındı
                   ),
                 ),
               ),
@@ -106,12 +106,12 @@ class _SwipeToDeleteItemState extends State<SwipeToDeleteItem> with SingleTicker
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.red,
+                    color: Theme.of(context).colorScheme.error, // Temadan alındı
                   ),
                   padding: const EdgeInsets.all(8),
-                  child: const Icon(Icons.delete, color: Colors.white),
+                  child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError), // Temadan alındı
                 ),
               ),
             ),
@@ -131,11 +131,11 @@ class _SwipeToDeleteItemState extends State<SwipeToDeleteItem> with SingleTicker
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text('Kişiyi Sil'),
-                      content: Text('${widget.question} silinsin mi?'),
+                      title: Text('Kişiyi Sil', style: Theme.of(context).textTheme.headlineSmall), // Temadan alındı
+                      content: Text('${widget.question} silinsin mi?', style: Theme.of(context).textTheme.bodyMedium), // Temadan alındı
                       actions: [
-                        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Hayır')),
-                        TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Evet')),
+                        TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text('Hayır', style: Theme.of(context).textTheme.labelLarge)), // Temadan alındı
+                        TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text('Evet', style: Theme.of(context).textTheme.labelLarge)), // Temadan alındı
                       ],
                     );
                   },
@@ -190,22 +190,22 @@ class _QuestionSelectionListState extends State<QuestionSelectionList> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Text('Yeni Kişi Ekle', style: TextStyle(color: Theme.of(context).primaryColor)),
+          title: Text('Yeni Kişi Ekle', style: Theme.of(context).textTheme.headlineSmall), // Temadan alındı
           content: TextField(
             controller: _textEditingController,
             decoration: const InputDecoration(hintText: "Kişi Adı"),
-            style: TextStyle(color: Theme.of(context).primaryColor),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface), // Temadan alındı
           ),
           actions: [
             TextButton(
-              child: const Text('İptal'),
+              child: Text('İptal', style: Theme.of(context).textTheme.labelLarge), // Temadan alındı
               onPressed: () {
                 Navigator.of(context).pop();
                 _textEditingController.clear();
               },
             ),
             TextButton(
-              child: const Text('Ekle'),
+              child: Text('Ekle', style: Theme.of(context).textTheme.labelLarge), // Temadan alındı
               onPressed: () {
                 final newquestion = _textEditingController.text.trim();
                 if (newquestion.isNotEmpty) {
@@ -278,18 +278,18 @@ class _QuestionSelectionListState extends State<QuestionSelectionList> {
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
                             shape: BoxShape.circle,
-                            boxShadow: const [
+                            boxShadow: [
                               BoxShadow(
-                                color: Colors.black26,
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alındı
                                 blurRadius: 8,
                                 offset: Offset(0, 4),
                               ),
                             ],
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.add,
                             size: 20,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onPrimary, // Temadan alındı
                           ),
                         ),
                       ),

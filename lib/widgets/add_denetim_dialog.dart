@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:prens/widgets/person_list.dart';
-import 'package:prens/global_variables.dart' as globals;
+import 'package:prens/constants/global_variables.dart' as globals;
 
 class AddDenetimDialog extends StatefulWidget {
   const AddDenetimDialog({super.key});
@@ -13,9 +13,6 @@ class AddDenetimDialog extends StatefulWidget {
 }
 
 class _AddDenetimDialogState extends State<AddDenetimDialog> {
-  final Color _backgroundColor = const Color(0xFFFFF8E1);
-  final Color _textColor = const Color(0xFFE31C24);
-
   int _step = 1;
 
   int? _startDay;
@@ -88,7 +85,7 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
           scrollController: controller,
           itemExtent: 32.0,
           onSelectedItemChanged: onChanged,
-          children: data.map((item) => Center(child: Text(item.toString(), style: TextStyle(fontSize: 20, color: _textColor)))).toList(),
+          children: data.map((item) => Center(child: Text(item.toString(), style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.primary)))).toList(), // Temadan alındı
         ),
       ),
     );
@@ -119,7 +116,7 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: _backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor, // Temadan alındı
       content: Material(
         color: Colors.transparent,
         child: Builder(
@@ -130,11 +127,11 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
                   height: 300,
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
-                    color: _backgroundColor,
-                    border: Border.all(color: _textColor, width: 2),
+                    color: Theme.of(context).scaffoldBackgroundColor, // Temadan alındı
+                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2), // Temadan alındı
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black26,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alındı
                         blurRadius: 8,
                         offset: Offset(0, 2),
                       ),
@@ -144,7 +141,7 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Başlangıç Tarihi', style: TextStyle(color: _textColor)),
+                      Text('Başlangıç Tarihi', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -168,7 +165,7 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
                           ),
                         ],
                       ),
-                      Text('Bitiş Tarihi', style: TextStyle(color: _textColor)),
+                      Text('Bitiş Tarihi', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -200,11 +197,11 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
                 height: 300,
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
-                  color: _backgroundColor,
-                  border: Border.all(color: _textColor, width: 2),
+                  color: Theme.of(context).scaffoldBackgroundColor, // Temadan alındı
+                  border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2), // Temadan alındı
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black26,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alındı
                       blurRadius: 8,
                       offset: Offset(0, 2),
                     ),
@@ -221,22 +218,22 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
                     margin: EdgeInsets.symmetric(vertical: 4),
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: _textColor, // red
+                      color: Theme.of(context).colorScheme.primary, // Temadan alındı
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(department, style: TextStyle(color: _backgroundColor)), // cream
+                        Text(department, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)), // Temadan alındı
                         GestureDetector(
                           onTap: () => _showPersonSelector(department),
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
-                              color: _backgroundColor,
+                              color: Theme.of(context).colorScheme.onPrimary, // Temadan alındı
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text((_departmentAssignments[department] ?.split(' ').first ?? ''), style: TextStyle(color: _textColor)),
+                            child: Text((_departmentAssignments[department] ?.split(' ').first ?? ''), style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
                           ),
                         ),
                       ],
@@ -255,12 +252,12 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
       actions: [
         if (_step == 1)
           TextButton(
-            child: Text('İptal', style: TextStyle(color: _textColor)),
+            child: Text('İptal', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
             onPressed: () => Navigator.of(context).pop(),
           ),
         if (_step == 2)
           TextButton(
-            child: Text('Geri', style: TextStyle(color: _textColor)),
+            child: Text('Geri', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
             onPressed: () {
               setState(() {
                 _step = 1;
@@ -269,7 +266,7 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
           ),
         if (_step == 1)
           TextButton(
-            child: Text('Devam', style: TextStyle(color: _textColor)),
+            child: Text('Devam', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
             onPressed: () {
               setState(() {
                 _step = 2;
@@ -278,7 +275,7 @@ class _AddDenetimDialogState extends State<AddDenetimDialog> {
           ),
         if (_step == 2)
           TextButton(
-            child: Text('Kaydet', style: TextStyle(color: _textColor)),
+            child: Text('Kaydet', style: TextStyle(color: Theme.of(context).colorScheme.primary)), // Temadan alındı
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -295,5 +292,4 @@ Map<String, String> assignPeopleToDepartment() {
     assignments[department] = globals.peopleList.first;
   }
 
-  return assignments;
-}
+  return assignments;}

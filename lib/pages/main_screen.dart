@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:prens/main.dart'; // main.dart dosyasını import et
 // Import rendering for ScrollDirection
-import '../theme/main_theme.dart';
 import '../widgets/denetim_card.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -37,13 +37,12 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: MainTheme.lightTheme,
+      data: Theme.of(context),
       child: Scaffold(
+        
         body: Stack(
           children: [
             GestureDetector(
@@ -67,20 +66,19 @@ class _MainScreenState extends State<MainScreen> {
                       });
                     },
                     child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       height: _appBarHeight,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.only(
+                        color: Theme.of(context).colorScheme.primary, // Temadan alınan renk ile güncellendi
+                        borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(30),
                           bottomRight: Radius.circular(30),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            // ignore: deprecated_member_use
-                            color: Colors.black.withOpacity(0.5),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5), // Temadan alınan renk ile güncellendi
                             blurRadius: 12,
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
@@ -97,28 +95,28 @@ class _MainScreenState extends State<MainScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    CircleAvatar(
+                                    const CircleAvatar(
                                       radius: 28,
                                       backgroundImage: NetworkImage('https://picsum.photos/200'),
                                     ),
-                                    SizedBox(width: 12),
+                                    const SizedBox(width: 12),
                                     Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Hoşgeldin,',
-                                          style: TextStyle(color: Colors.white, fontSize: 14),
+                                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 14), // Temadan alınan renk ile güncellendi
                                         ),
                                         Text(
                                           'Cihan',
-                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold, fontSize: 16), // Temadan alınan renk ile güncellendi
                                         ),
                                       ],
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     IconButton(
-                                      icon: Icon(Icons.logout, color: Colors.white),
+                                      icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.onPrimary), // Temadan alınan renk ile güncellendi
                                       onPressed: () {
                                         showDialog(
                                           context: context,
@@ -135,8 +133,9 @@ class _MainScreenState extends State<MainScreen> {
                                                 ),
                                                 TextButton(
                                                   child: Text("Logout", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     Navigator.of(context).pop();
+                                                    await authService?.signOut();
                                                   },
                                                 ),
                                               ],
@@ -145,7 +144,7 @@ class _MainScreenState extends State<MainScreen> {
                                         );
                                       },
                                     ),
-                                    SizedBox(width: 16),
+                                    const SizedBox(width: 16),
                                   ],
                                 ),
                               ),
@@ -155,9 +154,12 @@ class _MainScreenState extends State<MainScreen> {
                             bottom: 0,
                             left: 0,
                             right: 0,
-                            child: AnimatedOpacity(
-                              opacity: _isExpanded ? 1.0 : 0.0,
-                              duration: Duration(milliseconds: 300),
+                            child: Visibility(
+                              visible: _isExpanded,
+                              maintainState: true,
+                              maintainAnimation: true,
+                              maintainSize: true,
+                              maintainInteractivity: false,
                               child: Center(
                                 child: Image.asset(
                                   'assets/images/saka.png',
@@ -174,8 +176,8 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   Expanded(
                     child: ListView(
-                      padding: EdgeInsets.all(16),
-                      children: [
+                      padding: const EdgeInsets.all(16),
+                      children: const [
                         DenetimCard(),
                       ],
                     ),

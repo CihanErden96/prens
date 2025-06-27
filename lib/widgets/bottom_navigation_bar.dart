@@ -32,15 +32,14 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       duration: Duration(milliseconds: 300),
       height: widget.isBottomBarRaised ? 500 : 90,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).colorScheme.primary, // Temadan alındı
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
         ),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3), // Temadan alındı
             blurRadius: 12,
             offset: Offset(0, -2),
           )
@@ -61,7 +60,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black26,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alındı
                       blurRadius: 6,
                       offset: Offset(0, 2),
                     ),
@@ -112,7 +111,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                   return Transform.translate(
                     offset: Offset(0, -20),
                     child: Material(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary, // Temadan alındı
                       shape: CircleBorder(),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(40),
@@ -129,11 +128,11 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                             width: 80,
                             height: 80,
                             decoration: BoxDecoration(
-                              color: widget.selectedIndex == index ? Colors.white : Theme.of(context).primaryColor,
+                              color: widget.selectedIndex == index ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.primary, // Temadan alındı
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black26,
+                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alındı
                                   blurRadius: 8,
                                   offset: Offset(0, 4),
                                 ),
@@ -142,7 +141,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                             child: Icon(
                               iconData,
                               size: 40,
-                              color: widget.selectedIndex == index ? Theme.of(context).primaryColor : Colors.white,
+                              color: widget.selectedIndex == index ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onPrimary, // Temadan alındı
                             ),
                           ),
                         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prens/global_variables.dart' as globals;
-
+import 'package:prens/constants/global_variables.dart' as globals;
 class SwipeToDeleteItem extends StatefulWidget {
   final String person;
   final VoidCallback onDelete;
@@ -74,8 +73,8 @@ class _SwipeToDeleteItemState extends State<SwipeToDeleteItem> with SingleTicker
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.person, style: const TextStyle(color: Colors.white)),
-              const Icon(Icons.person, color: Colors.white),
+              Text(widget.person, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)), // Temadan alındı
+              Icon(Icons.person, color: Theme.of(context).colorScheme.onPrimary), // Temadan alındı
             ],
           ),
         ),
@@ -92,12 +91,12 @@ class _SwipeToDeleteItemState extends State<SwipeToDeleteItem> with SingleTicker
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.red,
+                    color: Theme.of(context).colorScheme.error, // Temadan alındı
                   ),
                   padding: const EdgeInsets.all(8),
-                  child: const Icon(Icons.delete, color: Colors.white),
+                  child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError), // Temadan alındı
                 ),
               ),
             ),
@@ -264,18 +263,18 @@ class _PersonSelectionListState extends State<PersonSelectionList> {
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
                             shape: BoxShape.circle,
-                            boxShadow: const [
+                            boxShadow: [
                               BoxShadow(
-                                color: Colors.black26,
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alındı
                                 blurRadius: 8,
                                 offset: Offset(0, 4),
                               ),
                             ],
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.add,
                             size: 20,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onPrimary, // Temadan alındı
                           ),
                         ),
                       ),

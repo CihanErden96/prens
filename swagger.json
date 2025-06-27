@@ -1,0 +1,930 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Prens API",
+    "version": "1.0.0",
+    "description": "API documentation for the Prens project"
+  },
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "question",
+      "description": "Operations related to questions"
+    },
+    {
+      "name": "department",
+      "description": "Operations related to departments"
+    },
+    {
+      "name": "people",
+      "description": "Operations related to employees"
+    },
+    {
+      "name": "denetimler",
+      "description": "Operations related to audits"
+    }
+  ],
+  "paths": {
+    "/denetimler": {
+      "get": {
+        "tags": ["denetimler"],
+        "summary": "Get all audits with related information",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of audits, with one row per audit_question record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditItem"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["denetimler"],
+        "summary": "Add a new audit and associated questions",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAudit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Audit created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "denetim_id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (missing required fields)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/denetimler/person/{personId}": {
+      "get": {
+        "tags": ["denetimler"],
+        "summary": "Get audits by responsible employee",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the responsible employee"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of audits for the employee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditItem"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No audit record found for the specified employee.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/denetimler/{id}": {
+      "get": {
+        "tags": ["denetimler"],
+        "summary": "Get a specific audit with all details",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the audit to get"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audit details including associated questions and actions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                   "$ref": "#/components/schemas/AuditDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified Audit not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/departments": {
+      "get": {
+        "tags": ["department"],
+        "summary": "Get all departments",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of departments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Department"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["department"],
+        "summary": "Add a new department",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "departman_adi": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "departman_adi"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Department added successfully",
+             "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "departman_id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+           "400": {
+            "description": "Bad request (missing department name)",
+             "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (department name already exists or foreign key violation)",
+             "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/departments/{id}": {
+      "delete": {
+        "tags": ["department"],
+        "summary": "Delete a department by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the department to delete"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Department deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified Department not found.",
+             "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+           "409": {
+            "description": "Conflict (department is associated with employees or audits)",
+             "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees": {
+      "get": {
+        "tags": ["people"],
+        "summary": "Get all employees",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of employees",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Employee"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/questions": {
+      "get": {
+        "tags": ["question"],
+        "summary": "Get all questions",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of questions",
+             "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Question"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["question"],
+        "summary": "Add a new question",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "soru_metni": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "soru_metni"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Question added successfully",
+             "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                   "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "soru_id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (missing question text)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/questions/{id}": {
+      "delete": {
+        "tags": ["question"],
+        "summary": "Delete a question by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the question to delete"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authentication",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {{Token}}"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Question deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified Question not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (question is associated with audit records)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuditItem": {
+        "type": "object",
+        "properties": {
+          "denetim_soru_id": {
+            "type": "integer"
+          },
+          "denetim_id": {
+            "type": "integer"
+          },
+          "denetim_baslangic_tarihi": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "denetim_bitis_tarihi": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "departman_id": {
+            "type": "integer"
+          },
+          "departman_adi": {
+            "type": "string"
+          },
+          "soru_id": {
+            "type": "integer"
+          },
+          "soru_metni": {
+            "type": "string"
+          },
+          "calisan_id": {
+            "type": "integer"
+          },
+          "ad_soyad": {
+            "type": "string"
+          },
+          "durum": {
+            "type": "string"
+          },
+          "puan": {
+            "type": "integer"
+          }
+        }
+      },
+      "AuditDetail": {
+        "type": "object",
+        "properties": {
+          "denetim_id": {
+            "type": "integer"
+          },
+          "denetim_baslangic_tarihi": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "denetim_bitis_tarihi": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sorular": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditDetailQuestion"
+            }
+          }
+        }
+      },
+      "AuditDetailQuestion": {
+        "type": "object",
+        "properties": {
+          "denetim_soru_id": {
+            "type": "integer"
+          },
+          "soru": {
+            "type": "object",
+            "properties": {
+              "soru_id": {
+                "type": "integer"
+              },
+              "soru_metni": {
+                "type": "string"
+              }
+            }
+          },
+          "sorumlu_calisan": {
+            "type": "object",
+            "properties": {
+              "calisan_id": {
+                "type": "integer"
+              },
+              "ad_soyad": {
+                "type": "string"
+              }
+            }
+          },
+          "departman": {
+            "type": "object",
+            "properties": {
+               "departman_id": {
+                "type": "integer"
+              },
+              "departman_adi": {
+                "type": "string"
+              }
+            }
+          },
+          "durum": {
+            "type": "string"
+          },
+          "puan": {
+            "type": "integer"
+          },
+          "aksiyonlar": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Aksiyon"
+            }
+          }
+        }
+      },
+      "Aksiyon": {
+        "type": "object",
+        "properties": {
+          "aksiyon_id": {
+            "type": "integer"
+          },
+          "aksiyon": {
+            "type": "string"
+          },
+          "aksiyon_tarihi": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "foto_url": {
+            "type": "string"
+          }
+        }
+      },
+      "NewAudit": {
+        "type": "object",
+        "properties": {
+          "denetim_baslangic_tarihi": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Audit start date and time (ISO 8601)"
+          },
+          "denetim_bitis_tarihi": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Audit end date and time (ISO 8601)"
+          },
+          "sorular": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "soru_id": {
+                  "type": "integer"
+                },
+                "calisan_id": {
+                  "type": "integer"
+                },
+                "departman_id": {
+                  "type": "integer"
+                },
+                "durum": {
+                  "type": "string",
+                  "description": "\"Uygun\", \"Uygun Değil\", \"Gerekli Değil\", etc."
+                },
+                "puan": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "soru_id",
+                "calisan_id",
+                "departman_id",
+                "durum",
+                "puan"
+              ]
+            }
+          }
+        },
+        "required": [
+          "denetim_baslangic_tarihi",
+          "denetim_bitis_tarihi",
+          "sorular"
+        ]
+      },
+      "Department": {
+        "type": "object",
+        "properties": {
+          "departman_id": {
+            "type": "integer"
+          },
+          "departman_adi": {
+            "type": "string"
+          }
+        }
+      },
+      "Employee": {
+        "type": "object",
+        "properties": {
+          "calisan_id": {
+            "type": "integer"
+          },
+          "ad_soyad": {
+            "type": "string"
+          },
+          "calisan_user_id": {
+            "type": "integer"
+          },
+          "rol": {
+            "type": "string"
+          }
+        }
+      },
+      "Question": {
+        "type": "object",
+        "properties": {
+          "soru_id": {
+            "type": "integer"
+          },
+          "soru_metni": {
+            "type": "string"
+          }
+        }
+      },
+       "Message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

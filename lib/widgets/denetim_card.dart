@@ -33,7 +33,7 @@ class DenetimCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).scaffoldBackgroundColor, // Updated text color
+                    color: Theme.of(context).colorScheme.onPrimary, // Temadan alınan renk ile güncellendi
                   ),
                 ),
               ),
@@ -48,11 +48,10 @@ class DenetimCard extends StatelessWidget {
                     height: 28,
                     margin: EdgeInsets.only(right: 60),
                     decoration: BoxDecoration(
-                      // ignore: deprecated_member_use
-                      color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5),
+                      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5), // Temadan alınan renk ile güncellendi
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: Theme.of(context).scaffoldBackgroundColor,
+                        color: Theme.of(context).colorScheme.onPrimary, // Temadan alınan renk ile güncellendi
                         width: 1.5,
                       ),
                     ),
@@ -84,7 +83,7 @@ class DenetimCard extends StatelessWidget {
                               value: 0.50, // Replace with dynamic value if needed
                               backgroundColor: Colors.transparent,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).scaffoldBackgroundColor,
+                                Theme.of(context).colorScheme.onPrimary, // Temadan alınan renk ile güncellendi
                               ),
                               minHeight: 28,
                             ),
@@ -114,15 +113,15 @@ class DenetimCard extends StatelessWidget {
                     height: 28,
                     margin: EdgeInsets.only(right: 60),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
+                      color: Theme.of(context).colorScheme.onPrimary, // Temadan alınan renk ile güncellendi
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: Theme.of(context).scaffoldBackgroundColor,
+                        color: Theme.of(context).colorScheme.onPrimary, // Temadan alınan renk ile güncellendi
                         width: 1.5,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black26,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alınan renk ile güncellendi
                           blurRadius: 6,
                           offset: Offset(0, 3),
                         ),
@@ -153,12 +152,11 @@ class DenetimCard extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: Theme.of(context).scaffoldBackgroundColor, // Updated text color
+                      color: Theme.of(context).colorScheme.onPrimary, // Temadan alınan renk ile güncellendi
                     ),
                   ),
-                  progressColor: Theme.of(context).scaffoldBackgroundColor, // Updated progress color
-                  // ignore: deprecated_member_use
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.3), // Updated background color with opacity
+                  progressColor: Theme.of(context).colorScheme.onPrimary, // Temadan alınan renk ile güncellendi
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3), // Temadan alınan renk ile güncellendi
                   circularStrokeCap: CircularStrokeCap.round,
                 ),
               ),
@@ -168,23 +166,21 @@ class DenetimCard extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    boxShadow: [
+                  boxShadow: [
                       BoxShadow(
-                        color: Colors.black26,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2), // Temadan alınan renk ile güncellendi
                         blurRadius: 8,
                         offset: Offset(0, 4),
                       ),
                     ],
                   ),
                   child: Material(
-                    color: Colors.transparent,
-                    shape: CircleBorder(),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(40),
-                      // ignore: deprecated_member_use
-                      splashColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.3), // Updated splash color
-                      // ignore: deprecated_member_use
-                      highlightColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.1), // Updated highlight color
+                      color: Colors.transparent,
+                      shape: CircleBorder(),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(40),
+                        splashColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3), // Temadan alınan renk ile güncellendi
+                        highlightColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.1), // Temadan alınan renk ile güncellendi
                       onTap: () {
                         showDialog(
                           context: context,
@@ -196,13 +192,13 @@ class DenetimCard extends StatelessWidget {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor, // Background color remains primary
+                          color: Theme.of(context).colorScheme.primary, // Background color remains primary
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.add_outlined,
                           size: 40,
-                          color: Theme.of(context).scaffoldBackgroundColor, // Updated icon color
+                          color: Theme.of(context).colorScheme.onPrimary, // Temadan alınan renk ile güncellendi
                         ),
                       ),
                     ),
