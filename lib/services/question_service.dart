@@ -2,14 +2,18 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:prens/models/question.dart';
-import 'package:prens/constants/global_variables.dart';
+import 'package:prens/constants/global_variables.dart'; // Assuming this contains authService
+import 'package:isar/isar.dart'; // Import Isar
 
 class QuestionService {
+  final Isar isar; // Add Isar instance
   final String _baseUrl =
       'https://firstappcihannode.azurewebsites.net'; // Your backend base URL
 
+  QuestionService({required this.isar}); // Constructor to receive Isar instance
+
   Future<Map<String, String>> _getHeaders() async {
-    final token = await authService.getToken();
+    final token = await authService!.getToken(); // Use null-aware operator
     if (token == null) {
       throw Exception('Authentication token not available.');
     }
@@ -19,7 +23,8 @@ class QuestionService {
     };
   }
 
-  Future<List<Question>> fetchQuestions() async {
+  // Fetch questions from API and store in Isar
+  Future<void> syncQuestionsFromApi() async {
     try {
       final headers = await _getHeaders();
       final url = Uri.parse('$_baseUrl/question');
@@ -27,15 +32,34 @@ class QuestionService {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((json) => Question.fromJson(json)).toList();
+        final List<Question> fetchedQuestions = responseData.map((json) => Question.fromJson(json)).toList();
+
+        // Clear existing data in Isar and save the new data
+        await isar.writeTxn(() async {
+          await isar.questions.clear(); // Clear the collection
+          await isar.questions.putAll(fetchedQuestions); // Save new data
+        });
+
+        print('Questions synced from API and stored in Isar.');
+
       } else {
-        print('Failed to load questions: ${response.statusCode}');
+        print('Failed to load questions from API: ${response.statusCode}');
         print('Response body: ${response.body}');
-        throw Exception('Failed to load questions');
+        throw Exception('Failed to load questions from API');
       }
     } catch (e) {
-      print('Error fetching questions: $e');
-      throw e; // Re-throw the exception for handling in the UI
+      print('Error syncing questions from API: $e');
+      throw e; // Re-throw the exception
+    }
+  }
+
+  // Get questions directly from Isar
+  Future<List<Question>> getQuestionsFromIsar() async {
+    try {
+      return await isar.questions.where().findAll();
+    } catch (e) {
+      print('Error getting questions from Isar: $e');
+      throw e;
     }
   }
 
@@ -51,34 +75,21 @@ class QuestionService {
 
       if (response.statusCode == 201) {
         final responseData = json.decode(response.body);
-        // Assuming the POST response returns the newly created question with ID
-        // Adjust parsing if the response structure is different
-        // The swagger shows a message and soru_id, we might need to fetch again or assume structure
-        // For simplicity, let's assume the response body can be used to construct a Question object
-        // If not, a refetch after adding would be necessary in the UI component.
-        // Based on swagger, the response is {"message": "Question added successfully", "soru_id": 123}
-        // We need the full question object to add to the list, so refetching is safer or the API should return the full object on POST.
-        // Let's adjust to reflect swagger - the UI will need to refetch.
         if (responseData['soru_id'] != null && questionText.isNotEmpty) {
-          // This isn't ideal as we don't have the full Question object, just ID.
-          // A refetch is necessary or the API should return the created Question.
-          // Let's proceed assuming the UI handles the list update, perhaps by refetching.
-          print(
-            'Question added successfully with ID: ${responseData['soru_id']}',
-          );
-          // Returning a placeholder or the ID might be useful, but the UI needs the full object for the list.
-          // Let's adjust the UI logic to refetch after adding.
-          // This method will simply indicate success/failure.
-          return Future.value(
-            Question(soruId: responseData['soru_id'], soruMetni: questionText),
-          ); // Return a partial object or adjust based on actual API return
+          final newQuestion = Question(soruId: responseData['soru_id'], soruMetni: questionText);
+          // Save the new question to Isar
+          await isar.writeTxn(() async {
+            await isar.questions.put(newQuestion);
+          });
+          print('Question added successfully to API and Isar.');
+          return newQuestion;
         } else {
-          throw Exception('Failed to parse added question response');
+          throw Exception('Failed to parse added question response from API');
         }
       } else {
-        print('Failed to add question: ${response.statusCode}');
+        print('Failed to add question to API: ${response.statusCode}');
         print('Response body: ${response.body}');
-        throw Exception('Failed to add question');
+        throw Exception('Failed to add question to API');
       }
     } catch (e) {
       print('Error adding question: $e');
@@ -93,14 +104,22 @@ class QuestionService {
       final response = await http.delete(url, headers: headers);
 
       if (response.statusCode == 200) {
-        print('Question deleted successfully');
+        // Delete the question from Isar
+        await isar.writeTxn(() async {
+          // Find the question by soruId (indexed field)
+          final questionToDelete = await isar.questions.where().soruIdEqualTo(questionId).findFirst();
+          if (questionToDelete != null) {
+            await isar.questions.delete(questionToDelete.id!);
+          }
+        });
+        print('Question deleted successfully from API and Isar.');
       } else if (response.statusCode == 404) {
-        print('Question with ID $questionId not found.');
-        throw Exception('Question not found');
+        print('Question with ID $questionId not found on API.');
+        throw Exception('Question not found on API');
       } else {
-        print('Failed to delete question: ${response.statusCode}');
+        print('Failed to delete question from API: ${response.statusCode}');
         print('Response body: ${response.body}');
-        throw Exception('Failed to delete question');
+        throw Exception('Failed to delete question from API');
       }
     } catch (e) {
       print('Error deleting question: $e');

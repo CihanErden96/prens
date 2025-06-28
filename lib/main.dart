@@ -5,12 +5,26 @@ import 'package:prens/services/msal_auth_service.dart';
 import 'package:prens/core/app_theme.dart';
 import 'constants/global_variables.dart';
 import 'config/app_config.dart';
+import 'package:isar/isar.dart';
+import 'package:prens/models/question.dart'; // Import your generated file
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
+
+late Isar isar;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final dir = await getApplicationSupportDirectory();
+  isar = await Isar.open(
+    [QuestionSchema], // Add your generated schema here
+    directory: dir.path,
+    inspector: true,
+  );
+
   await AppConfig.initialize(AppEnvironment.development);
   authService = MsalAuthService(AppConfig.instance);
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp())); // Wrap MyApp with ProviderScope
 }
 
 class MyApp extends StatefulWidget {

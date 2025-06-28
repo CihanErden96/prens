@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
 import 'package:prens/models/question.dart';
-import 'package:prens/services/question_service.dart';
+// Remove unused import: import 'package:prens/services/question_service.dart';
+import 'package:prens/providers/question_provider.dart'; // Import the question provider
 
 class SwipeToDeleteItem extends StatefulWidget {
   // Changed type to Question
@@ -187,7 +189,7 @@ class _SwipeToDeleteItemState extends State<SwipeToDeleteItem>
   }
 }
 
-class QuestionSelectionList extends StatefulWidget {
+class QuestionSelectionList extends ConsumerStatefulWidget { // Change to ConsumerStatefulWidget
   // Changed onSelect to pass Question object
   final void Function(Question question) onSelect;
   final bool enableDeletion;
@@ -201,100 +203,27 @@ class QuestionSelectionList extends StatefulWidget {
   });
 
   @override
-  State<QuestionSelectionList> createState() => _QuestionSelectionListState();
+  ConsumerState<QuestionSelectionList> createState() => _QuestionSelectionListState();
 }
 
-class _QuestionSelectionListState extends State<QuestionSelectionList> {
+class _QuestionSelectionListState extends ConsumerState<QuestionSelectionList> {
   final TextEditingController _textEditingController = TextEditingController();
-  List<Question> _questions = [];
-  bool _isLoading = false;
-
-  // --- Placeholder for AppConfig initialization ---
-  // You need to replace `AppConfig()` with the correct way to
-  // initialize or obtain an AppConfig instance based on your project structure.
-  // The previous errors indicated AppConfig() constructor requires parameters.
-  // Example (if AppConfig had a fromEnvironment method):
-  // final MsalAuthService authService = MsalAuthService(AppConfig.fromEnvironment(Environment.development));
-  // Example (if AppConfig is a singleton):
-  // final MsalAuthService authService = MsalAuthService(AppConfig.instance);
-  // For now, we'll keep the potentially incorrect initialization but highlight it.
-
-  // Instantiate the QuestionService
-  late final QuestionService _questionService;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the QuestionService with the auth service
-    _questionService = QuestionService();
-    _fetchQuestions(); // Fetch questions when the widget initializes
+    // Load questions when the widget initializes using the Riverpod provider
+    // We use ref.read to access the notifier's methods from initState
+    // Use addPostFrameCallback to ensure context is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(questionListProvider.notifier).loadQuestions();
+    });
   }
 
   @override
   void dispose() {
     _textEditingController.dispose();
     super.dispose();
-  }
-
-  // Method to fetch questions from the API using QuestionService
-  Future<void> _fetchQuestions() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final fetchedQuestions = await _questionService.fetchQuestions();
-      setState(() {
-        _questions = fetchedQuestions;
-        _isLoading = false;
-      });
-    } catch (e) {
-      // Handle errors (e.g., show a SnackBar)
-      print('Error fetching questions: $e');
-      setState(() {
-        _isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load questions: ${e.toString()}')),
-      );
-    }
-  }
-
-  // Method to add a new question via API using QuestionService
-  Future<void> _addQuestion(String questionText) async {
-    try {
-      // The QuestionService.addQuestion method now handles the API call.
-      // After successful addition, refetch the list to show the new question.
-      await _questionService.addQuestion(questionText);
-      _fetchQuestions(); // Refetch to update the list
-    } catch (e) {
-      // Handle errors
-      print('Error adding question: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add question: ${e.toString()}')),
-      );
-    }
-  }
-
-  // Method to delete a question via API using QuestionService
-  Future<void> _deleteQuestion(int questionId) async {
-    try {
-      // The QuestionService.deleteQuestion method now handles the API call.
-      await _questionService.deleteQuestion(questionId);
-      // If successful, remove from local list and update UI
-      setState(() {
-        _questions.removeWhere((q) => q.soruId == questionId);
-      });
-      print('Question deleted successfully');
-    } catch (e) {
-      // Handle errors
-      print('Error deleting question: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete question: ${e.toString()}')),
-      );
-      // If deletion failed on backend, you might want to refetch the list
-      // _fetchQuestions();
-    }
   }
 
   Future<void> _showAddquestionDialog(BuildContext context) async {
@@ -333,9 +262,8 @@ class _QuestionSelectionListState extends State<QuestionSelectionList> {
               onPressed: () {
                 final newQuestionText = _textEditingController.text.trim();
                 if (newQuestionText.isNotEmpty) {
-                  _addQuestion(
-                    newQuestionText,
-                  ); // Call add method which uses QuestionService
+                  // Call add method on the Riverpod notifier
+                  ref.read(questionListProvider.notifier).addQuestion(newQuestionText);
                 }
                 Navigator.of(context).pop();
                 _textEditingController.clear();
@@ -349,6 +277,16 @@ class _QuestionSelectionListState extends State<QuestionSelectionList> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch the question list from the provider
+    final questions = ref.watch(questionListProvider);
+
+    // You might want to handle loading and error states here based on your QuestionNotifier implementation
+    // For example, if your notifier exposes a loading state:
+    // final questionState = ref.watch(questionListProvider);
+    // if (questionState.isLoading) { return Center(child: CircularProgressIndicator()); }
+    // if (questionState.hasError) { return Center(child: Text('Error: ${questionState.error}')); }
+    // final questions = questionState.value!;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -359,22 +297,25 @@ class _QuestionSelectionListState extends State<QuestionSelectionList> {
         child: Stack(
           children: [
             Positioned.fill(
-              child: _isLoading
+              // Check if questions are loaded (assuming non-empty list means loaded)
+              child: questions.isEmpty // This might need refinement if empty list is valid state
                   ? Center(
                       child: CircularProgressIndicator(),
-                    ) // Show loading indicator
+                    ) // Show loading indicator or empty state
                   : ListView.builder(
                       padding: const EdgeInsets.fromLTRB(8, 8, 8, 100),
-                      itemCount: _questions.length, // Use fetched questions
+                      itemCount: questions.length, // Use questions from provider
                       itemBuilder: (context, index) {
-                        final question = _questions[index];
+                        final question = questions[index];
                         return SwipeToDeleteItem(
                           key: ValueKey(
                             question.soruId,
                           ), // Use unique ID as key
                           question: question, // Pass the Question object
-                          onDelete:
-                              _deleteQuestion, // Pass the delete method which uses QuestionService
+                          onDelete: (questionId) {
+                            // Call delete method on the Riverpod notifier
+                            ref.read(questionListProvider.notifier).deleteQuestion(questionId);
+                          }, // Pass the delete method
                           onTap: (selectedQuestion) {
                             // Receive the selected Question object
                             widget.onSelect(
@@ -428,10 +369,10 @@ class _QuestionSelectionListState extends State<QuestionSelectionList> {
                     ),
                   ),
                 ),
-              ),
-          ],
-        ),
-      ),
-    );
+              ),        
+            ],      
+          ),   
+        ), 
+      );  
+    }
   }
-}
